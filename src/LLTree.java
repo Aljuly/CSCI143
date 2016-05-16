@@ -1,9 +1,3 @@
-/**
- * @author 
- *
- */
-
-//http://www.sanfoundry.com/java-program-implement-binary-search-tree-using-linked-list/
 
 public class LLTree implements CS143Tree {
 	
@@ -15,31 +9,73 @@ public class LLTree implements CS143Tree {
 		size = 0;
 	}
 
-
 	@Override
 	public void add(String item) {
-		// TODO Auto-generated method stub
-
+		root = addTreeNode(root, item);
+	}
+	
+	// Method for inserting data into binary tree
+	private TreeNode addTreeNode(TreeNode node, String item) {
+		if (node == null) {
+			// if current nod is Null(for example root nod), then create it and return it
+			node = new TreeNode(item);
+		} else if (item.compareTo(node.item) <= 0){
+			node.left = addTreeNode(node.left, item);
+		} else {
+			node.right = addTreeNode(node.right, item);
+		}
+		// count nodes added 
+		size++;
+		return node;
 	}
 
 	@Override
 	public String getPreOrder() {
-		// TODO Auto-generated method stub
-		return null;
+		return preOrder(root);
 	}
-
+	
+	// Method for tree preorder traversal
+	private String preOrder(TreeNode node) {
+		String data = "";
+		if (node != null) {
+			data = node.item + " ";
+			data += preOrder(node.left);
+			data += preOrder(node.right);
+		}
+		return data;
+	}
+	
 	@Override
 	public String getInOrder() {
-		// TODO Auto-generated method stub
-		return null;
+		return inOrder(root);
+	}
+	
+	// Method for tree inorder traversal
+	private String inOrder(TreeNode node) {
+		String data = "";
+		if (node != null) {
+			data = preOrder(node.left);
+			data += node.item + " ";
+			data += preOrder(node.right);
+		}
+		return data;
 	}
 
 	@Override
 	public String getPostOrder() {
-		// TODO Auto-generated method stub
-		return null;
+		return postOrder(root);
 	}
-
+	
+	// Method for tree postorder traversal
+	private String postOrder(TreeNode node) {
+		String data = "";
+		if (node != null) {
+			data = preOrder(node.left);
+			data += preOrder(node.right);
+			data += node.item + " ";
+		}
+		return data;
+	}
 
 	@Override
 	public int getHeight() {
@@ -52,41 +88,57 @@ public class LLTree implements CS143Tree {
 			return 0; 
 		} 
 		return (1 + Math.max(treeHeight(node.left), treeHeight(node.right))); 
-		
 	}
 
 
 	@Override
 	public int getNumberLeaf() {
-		// TODO Auto-generated method stub
-		return 0;
+		return countLeafNodes(root);
 	}
-
+	
+	// Method for recursive counting of leaf nodes
+	private int countLeafNodes(TreeNode node) {
+		if (node == null) return 0;
+		if ((node.left == null) && (node.right == null)) {
+			return 1;
+		} else {
+			return countLeafNodes(node.left) + countLeafNodes(node.right);
+		}
+	}
 
 	@Override
 	public TreeNode getTreeNodeContaining(String item) {
-		// TODO Auto-generated method stub
-		return null;
+		return searchNode(root, item);
 	}
 
-
+	// Method for searching for the node, which contains given string
+	private TreeNode searchNode(TreeNode node, String item) {
+		while (node != null) {
+			if (item.compareTo(node.item) <= 0) {
+				node = node.left;
+			} else if (item.compareTo(node.item) > 0) {
+				node = node.right;
+			} else {
+				return node;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public void deleteEntireTree() {
-		// TODO Auto-generated method stub
-
+		root = null;
+		size = 0;
 	}
 
 	@Override
 	public int getHowManyNodes() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
-
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size == 0? true : false;
 	}
 	
 	

@@ -1,7 +1,4 @@
-/**
- * @author 
- *
- */
+
 public class TreeNode {
 	
 	public TreeNode left; 
