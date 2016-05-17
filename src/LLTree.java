@@ -1,8 +1,8 @@
 
 public class LLTree implements CS143Tree {
 	
-	private TreeNode root;
-	private int size;
+	protected TreeNode root;
+	protected int size;
 	
 	public LLTree() {
 		root = null;
@@ -12,6 +12,8 @@ public class LLTree implements CS143Tree {
 	@Override
 	public void add(String item) {
 		root = addTreeNode(root, item);
+		// count nodes added  
+		size++;
 	}
 	
 	// Method for inserting data into binary tree
@@ -24,10 +26,48 @@ public class LLTree implements CS143Tree {
 		} else {
 			node.right = addTreeNode(node.right, item);
 		}
-		// count nodes added 
-		size++;
 		return node;
 	}
+	
+	
+	// Method for deleting data from tree
+	public boolean deleteNode (String item) { 
+		// if t is null return false 
+		if (root == null) 
+			return false;
+		else {
+			// if found node in t containing item then delete the node and return true
+			// if deleting root node, we created temporary root...
+			if (root.item.equals(item)) {
+				TreeNode tempRoot = new TreeNode("");
+				tempRoot.left = root;
+				boolean result = root.delete(tempRoot, item);
+				root = tempRoot.left;
+				return result;
+			} else {
+				return root.delete(null, item);
+			}
+		}
+	} 
+	
+	//Method for copying binary tree
+	public void copyTree (LLTree destination) { 
+		// clear destination
+		destination.deleteEntireTree();
+		// and copy
+		destination.root = copy(this.root);
+		destination.size = this.size;
+	} 
+	
+	//private method for recursive copying binary tree
+	private TreeNode copy (TreeNode source) { 
+		if (source == null) return source;
+		TreeNode temp = new TreeNode(source.item);
+		temp.left = copy(source.left);
+		temp.right = copy(source.right);
+		return temp;
+	} 
+
 
 	@Override
 	public String getPreOrder() {
@@ -40,7 +80,7 @@ public class LLTree implements CS143Tree {
 		if (node != null) {
 			data = node.item + " ";
 			data += preOrder(node.left);
-			data += preOrder(node.right);
+			data += preOrder(node.right); 
 		}
 		return data;
 	}
@@ -54,9 +94,9 @@ public class LLTree implements CS143Tree {
 	private String inOrder(TreeNode node) {
 		String data = "";
 		if (node != null) {
-			data = preOrder(node.left);
+			data = inOrder(node.left);
 			data += node.item + " ";
-			data += preOrder(node.right);
+			data += inOrder(node.right);
 		}
 		return data;
 	}
@@ -70,8 +110,8 @@ public class LLTree implements CS143Tree {
 	private String postOrder(TreeNode node) {
 		String data = "";
 		if (node != null) {
-			data = preOrder(node.left);
-			data += preOrder(node.right);
+			data = postOrder(node.left);
+			data += postOrder(node.right);
 			data += node.item + " ";
 		}
 		return data;
@@ -114,7 +154,7 @@ public class LLTree implements CS143Tree {
 	// Method for searching for the node, which contains given string
 	private TreeNode searchNode(TreeNode node, String item) {
 		while (node != null) {
-			if (item.compareTo(node.item) <= 0) {
+			if (item.compareTo(node.item) < 0) {
 				node = node.left;
 			} else if (item.compareTo(node.item) > 0) {
 				node = node.right;
